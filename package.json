@@ -1,0 +1,25 @@
+{
+  "name": "findflash",
+  "version": "1.0.0",
+  "description": "Simple Node Script to Spider a domain for any DOM reference to \"flash\"",
+  "main": "find-swf.js",
+  "dependencies": {
+    "crawler": "^0.4.3",
+    "url": "^0.10.3",
+    "winston": "^1.0.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iDVB/findflash.git"
+  },
+  "author": "Dan Van Brunt",
+  "license": "GNU",
+  "bugs": {
+    "url": "https://github.com/iDVB/findflash/issues"
+  },
+  "homepage": "https://github.com/iDVB/findflash"
+}
