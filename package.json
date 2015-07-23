@@ -1,6 +1,6 @@
 {
   "name": "findflash",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Simple Node Script to Spider a domain for any DOM reference to \"flash\"",
   "author": {
     "name": "Dan Van Brunt",
