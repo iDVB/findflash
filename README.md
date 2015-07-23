@@ -12,11 +12,14 @@ Here are the tests that are run:
 
 ## Install
 `npm install -g findflash`
+
 *** - There is no need to clone the repo.
 
 ## Usage
 `find-swf http://www.mysite.com`
+
 or
+
 `find-swf ./test/sites.csv`
 
 ## Logfile Output
