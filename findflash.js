@@ -22,12 +22,12 @@ if (!program.args.length) {
 var arg = program.args[0];
 var crawlerStream;
 var argStream = Rx.Observable.just(arg)
-    .concatMap(getUrlsFromString)//.take(1)
+    .concatMap(getUrlsFromString)//.last()
     .concatMap(getCrawlerStream)
-    .subscribe();
+    .subscribe(); 
 
-
-function getCrawlerStream(crawlURL) {    
+// Get a Stream that handled the domain crawl
+function getCrawlerStream(crawlURL) {
     var crawlerStream = Rx.Observable.create(function (observer) {
         var sitemap = [];
         var siteURL = url.parse(crawlURL);
@@ -36,7 +36,9 @@ function getCrawlerStream(crawlURL) {
             formatter: customFileFormatter,
             json: false
         });
-        winston.log('info', 'Crawling for Flash at: ', siteURL.href);
+        winston.log('info', '------------------------------------------------------');
+        winston.log('info', 'CRAWL DOMAIN - START: ', siteURL.href);
+        winston.log('info', '------------------------------------------------------');
 
         var c = new crawler({
             maxConnections: 10,
@@ -44,56 +46,59 @@ function getCrawlerStream(crawlURL) {
             callback: function (error, result, $) {
                 if (error) observer.onError();
                 if (getFileObject(result.uri).ext == 'pdf') return true
-                if (result.caseless.dict['content-type'] != 'text/html; charset=utf-8') return true;
+                //if (result.caseless.dict['content-type'] != 'text/html; charset=utf-8') return true;
 
                 var resultURL = url.parse(result.uri);
                 var formattedURL = resultURL.href.replace(resultURL.protocol+'//'+resultURL.hostname, '');
 
+                winston.log('info', ' CRAWLING PAGE: ', formattedURL);
+
                 // Test for CLASS
                 $('[class*="flash"]').each(function () {
-                    winston.log('info', "CLASS='"+ $(this).attr('class')+"'", formattedURL);
+                    winston.log('info', "   CLASS: '"+ $(this).attr('class')+"'");
                 });
 
                 // Test for ID
                 $('[id*="flash"]').each(function () {
-                    winston.log('info', "ID='"+ $(this).attr('id')+"'", formattedURL);
+                    winston.log('info', "   ID: '"+ $(this).attr('id')+"'");
                 });
 
                 // Test for VALUE=SWF
                 $('[value*=".swf"]').each(function () {
-                    winston.log('info', "VALUE='"+ $(this).attr('value')+"'", formattedURL);
+                    winston.log('info', "   VALUE: '"+ $(this).attr('value')+"'");
                 });
 
                 // Test for DATA=SWF
                 $('[data*=".swf"]').each(function () {
-                    winston.log('info', "DATA='"+ $(this).attr('data')+"'", formattedURL);
+                    winston.log('info', "   DATA: '"+ $(this).attr('data')+"'");
                 });
 
                 $('a[href!=""][href!="#"]').each(function () {
                     var href = $(this).attr('href');
-                        var absLink = url.resolve(siteURL.href, $(this).attr('href'));
-                        var target = {
-                          href: absLink,          // make it absolute
-                          url: url.parse(absLink) // parsed url
-                        };
+                    var absLink = url.resolve(siteURL.href, $(this).attr('href'));
+                    var target = {
+                      href: absLink,          // make it absolute
+                      url: url.parse(absLink) // parsed url
+                    };
 
-                        if (target.url.host == siteURL.host && sitemap.indexOf(target.href) == -1) {
-                          sitemap.push(target.href);
-                          //c.queue(target.href);
-                        }
-
-                      });
+                    if (target.url.host == siteURL.host && sitemap.indexOf(target.href) == -1) {
+                      sitemap.push(target.href);
+                      c.queue(target.href);
+                    }
+                });
             },
             onDrain: function() {
-                winston.log('info', 'FINISHED CRAWL:', siteURL.href);
 
-                //var pool = c.pool
-                //pool.drain(function(){pool.destroyAllNow();});
-
+                // var pool = c.pool
+                // pool.drain(function(){pool.destroyAllNow();});
+                winston.log('info', '------------------------------------------------------');
+                winston.log('info', 'CRAWL DOMAIN - FINISHED:', siteURL.href);
+                winston.log('info', '------------------------------------------------------');
                 winston.remove(winston.transports.File);
 
                 observer.onNext();
                 observer.onCompleted();
+                //process.exit(0);
             }
         });
         c.queue(siteURL.href);
@@ -118,6 +123,7 @@ function getUrlsFromString(stringPath){
     }
 }
 
+// Get file details of as a custom object
 function getFileObject(baseurl) {
 	var pathname = url.parse(baseurl).pathname;
 	var filename = pathname.substring(pathname.lastIndexOf('/')+1);
@@ -130,6 +136,7 @@ function getFileObject(baseurl) {
 	return fileobject;
 }
 
+// Custom Log File Formatter
 function customFileFormatter(options) {
     return (undefined !== options.message ? options.message : '') +
     (options.meta && Object.keys(options.meta).length ? '\n\t'+ JSON.stringify(options.meta) : '' );
