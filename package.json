@@ -2,24 +2,37 @@
   "name": "findflash",
   "version": "1.0.0",
   "description": "Simple Node Script to Spider a domain for any DOM reference to \"flash\"",
-  "main": "find-swf.js",
-  "dependencies": {
-    "crawler": "^0.4.3",
-    "url": "^0.10.3",
-    "winston": "^1.0.1"
+  "author": {
+    "name": "Dan Van Brunt",
+    "email": "dvanbrunt@gmail.com"
   },
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/iDVB/findflash.git"
-  },
-  "author": "Dan Van Brunt",
   "license": "GNU",
   "bugs": {
     "url": "https://github.com/iDVB/findflash/issues"
   },
-  "homepage": "https://github.com/iDVB/findflash"
+  "homepage": "https://github.com/iDVB/findflash",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iDVB/findflash.git"
+  },
+  "main": "findflash.js",
+  "dependencies": {
+    "commander": "^2.8.1",
+    "crawler": "git://github.com/iDVB/node-crawler.git#master",
+    "csv-parse": "^0.1.3",
+    "rx": "^2.5.3",
+    "rx-node": "^1.0.1",
+    "winston": "^1.0.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "preferGlobal": true,
+  "bin": {
+    "findflash": "findflash.js"
+  },
+  "readmeFilename": "README.md",
+  "engines": {
+    "node": ">= 0.10.x"
+  }
 }
