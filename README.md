@@ -16,11 +16,11 @@ Here are the tests that are run:
 *** - There is no need to clone the repo.
 
 ## Usage
-`find-swf http://www.mysite.com`
+`findflash http://www.mysite.com`
 
 or
 
-`find-swf ./test/sites.csv`
+`findflash ./test/sites.csv`
 
 ## Logfile Output
 The log files will output into the directory that you run the tool.
