@@ -45,6 +45,7 @@ function getCrawlerStream(crawlURL) {
             skipDuplicates: true,
             callback: function (error, result, $) {
                 if (error) observer.onError();
+                if (!$) return true;
                 if (getFileObject(result.uri).ext == 'pdf') return true
                 //if (result.caseless.dict['content-type'] != 'text/html; charset=utf-8') return true;
 
